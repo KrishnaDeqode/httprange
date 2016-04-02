@@ -76,7 +76,8 @@ func parseRange(s string, size int64) ([]httpRange, error) {
 //   "Content-Range": "bytes 100-200/1000"
 //   "Content-Range": "bytes 100-200/*"
 func getRange(start, end, total int64) string {
-	if total == 0 {
+	// unknown total: -1
+	if total == -1 {
 		return fmt.Sprintf("bytes %d-%d/*", start, end)
 	}
 

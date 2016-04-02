@@ -1,10 +1,6 @@
 package httprange
 
 import "net/http"
-import "strconv"
-
-// import "fmt"
-// import "io"
 
 type rangeResponseWriter struct {
 	http.ResponseWriter
@@ -28,7 +24,7 @@ func (w *rangeResponseWriter) Write(data []byte) (size int, err error) {
 	w.flag += int64(size)
 	var end int64
 	if w.flag <= w.start+w.length {
-		end = int64(size) - 1
+		end = int64(size)
 	} else {
 		end = w.start + w.length - (w.flag - int64(size))
 	}
@@ -47,7 +43,7 @@ func New() func(http.Handler) http.Handler {
 				h.ServeHTTP(res, req)
 				return
 			}
-			// BUG: get total content length - 100 for test
+			// BUG: get total content length (now: 100 for test)
 			ranges, err := parseRange(rangeString, 100)
 			if err != nil {
 				http.Error(res, "Requested Range Not Satisfiable", 416)
@@ -56,9 +52,10 @@ func New() func(http.Handler) http.Handler {
 			start := ranges[0].start
 			length := ranges[0].length
 
+			res.Header().Set("Content-Range", getRange(start, start+length-1, -1))
+			// res.Header().Set("Content-Length", strconv.FormatInt(length, 10))
 			res.WriteHeader(206)
-			res.Header().Set("Content-Range", getRange(start, start+length, 0))
-			res.Header().Set("Content-Length", strconv.FormatInt(length, 10))
+
 			h.ServeHTTP(&rangeResponseWriter{
 				ResponseWriter: res,
 				start:          start,

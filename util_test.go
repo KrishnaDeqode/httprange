@@ -72,7 +72,7 @@ func TestParseRange(t *testing.T) {
 }
 
 func TestGetRange(t *testing.T) {
-	if getRange(100, 200, 0) != "bytes 100-200/*" {
+	if getRange(100, 200, -1) != "bytes 100-200/*" {
 		t.Fail()
 	}
 	if getRange(100, 200, 500) != "bytes 100-200/500" {
