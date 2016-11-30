@@ -27,6 +27,15 @@ func resText2(res http.ResponseWriter, req *http.Request) {
 
 var chain2 = alice.New(New()).Then(http.HandlerFunc(resText2))
 
+func resText3(res http.ResponseWriter, req *http.Request) {
+	res.Write([]byte("Hello, one !"))
+	res.Write([]byte("Hello, two !"))
+
+	res.Header().Set("Content-Length", "24")
+}
+
+var chain3 = alice.New(New()).Then(http.HandlerFunc(resText2))
+
 // tests
 
 func TestGetNoRange(t *testing.T) {
@@ -72,6 +81,12 @@ func TestGetWithRange04(t *testing.T) {
 // server 2
 func TestGetWithRange10(t *testing.T) {
 	result, contentRange, contentLength := getRes(chain2, getRangeString(12, 30))
+	t.Log(result, contentRange, contentLength)
+}
+
+// server 3
+func TestGetWithRange20(t *testing.T) {
+	result, contentRange, contentLength := getRes(chain3, getRangeString(12, 30))
 	t.Log(result, contentRange, contentLength)
 }
 

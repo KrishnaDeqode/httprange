@@ -35,7 +35,9 @@ func parseRange(s string, size int64) ([]httpRange, error) {
 		}
 		start, end := strings.TrimSpace(ra[:i]), strings.TrimSpace(ra[i+1:])
 		var r httpRange
-		if start == "" {
+		if size == -1 {
+			// any size
+		} else if start == "" {
 			// If no start is specified, end specifies the
 			// range start relative to the end of the file.
 			i, err := strconv.ParseInt(end, 10, 64)

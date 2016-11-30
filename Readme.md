@@ -46,8 +46,8 @@ $ http get localhost:3000 range:bytes=0-4
 
 HTTP/1.1 206 Partial Content
 Accept-Ranges: bytes
-Content-Range: bytes 0-4/*
 Content-Length: 5
+Content-Range: bytes 0-4/*
 Content-Type: text/plain; charset=utf-8
 
 Hello

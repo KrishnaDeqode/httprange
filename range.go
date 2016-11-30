@@ -1,6 +1,7 @@
 package httprange
 
 import "net/http"
+import "fmt"
 
 type rangeResponseWriter struct {
 	http.ResponseWriter
@@ -44,6 +45,7 @@ func New() func(http.Handler) http.Handler {
 				return
 			}
 			// BUG: get total content length (now: 100 for test)
+			fmt.Println("op", res.Header().Get("Content-Length"))
 			ranges, err := parseRange(rangeString, 100)
 			if err != nil {
 				http.Error(res, "Requested Range Not Satisfiable", 416)
